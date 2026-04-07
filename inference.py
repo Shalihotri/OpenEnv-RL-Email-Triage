@@ -232,7 +232,14 @@ async def main() -> None:
     finally:
         try:
             if env is not None:
-                await env.close()
+                try:
+                    await env.close()
+                except Exception as exc:
+                    print(
+                        f"env_close_error={str(exc).replace(chr(10), ' ')}",
+                        file=sys.stderr,
+                        flush=True,
+                    )
         finally:
             if fatal_error:
                 print(f"fatal_error={fatal_error}", file=sys.stderr, flush=True)
